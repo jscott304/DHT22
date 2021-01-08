@@ -17,13 +17,8 @@
 
 ---------------------------------------------------------------------------------*/
 
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
-
 #include <stdio.h>
 #include "esp_log.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
 #include "driver/gpio.h"
 
 #include "DHT22.h"
@@ -41,6 +36,7 @@ float temperature = 0.;
 void setDHTgpio( int gpio )
 {
 	DHTgpio = gpio;
+	gpio_pad_select_gpio( gpio );
 }
 
 // == get temp & hum =============================================
@@ -165,13 +161,13 @@ uint8_t bitInx = 7;
 	// == DHT will keep the line low for 80 us and then high for 80us ====
 
 	uSec = getSignalLevel( 85, 0 );
-//	ESP_LOGI( TAG, "Response = %d", uSec );
+	//	ESP_LOGI( TAG, "Response = %d", uSec );
 	if( uSec<0 ) return DHT_TIMEOUT_ERROR; 
 
 	// -- 80us up ------------------------
 
 	uSec = getSignalLevel( 85, 1 );
-//	ESP_LOGI( TAG, "Response = %d", uSec );
+	//	ESP_LOGI( TAG, "Response = %d", uSec );
 	if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 	// == No errors, read the 40 data bits ================
